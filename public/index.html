@@ -1,33 +1,110 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Drive - Google Drive</title>
-  <link id="favicon" rel="icon" type="image/png" href="/img/drive.png" />
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <!-- Main content -->
-  <div class="wrapper">
-    <div class="header">
-      <h1>Crossy V3</h1>
-      <p>Search or enter a URL to cloak in a blank tab.</p>
-    </div>
+import express from "express";
+import fetch from "node-fetch";
+import { URL } from "url";
 
-    <div class="search-container">
-      <div class="search-input-wrapper">
-        <img src="/img/google.png" alt="Google" class="search-icon" />
-        <input type="text" id="searchInput" placeholder="Search Google or type URL..." autocomplete="off" />
-      </div>
-    </div>
+const app = express();
 
-    <p class="tagline"></p>
-  </div>
+// Utility to strip CSP/X-Frame-Options
+function stripHeaders(headers) {
+  const newHeaders = {};
+  headers.forEach((value, key) => {
+    if (!["content-security-policy", "x-frame-options"].includes(key.toLowerCase())) {
+      newHeaders[key] = value;
+    }
+  });
+  return newHeaders;
+}
 
-  <!-- Particle background -->
-  <canvas id="bgCanvas"></canvas>
+app.use(async (req, res) => {
+  try {
+    let target = req.query.url;
+    if (!target) return res.status(400).send("Missing ?url parameter");
 
-  <script src="script.js"></script>
-</body>
-</html>
+    if (!/^https?:\/\//i.test(target)) target = "https://" + target;
+    const targetUrl = new URL(target);
+
+    const response = await fetch(target, {
+      method: req.method,
+      headers: {
+        ...Object.fromEntries(
+          Object.entries(req.headers).filter(
+            ([key]) => !["host", "referer"].includes(key.toLowerCase())
+          )
+        )
+      },
+      redirect: "manual"
+    });
+
+    // Handle redirects
+    if (response.status >= 300 && response.status < 400 && response.headers.get("location")) {
+      const location = new URL(response.headers.get("location"), target).href;
+      return res.redirect(`/?url=${encodeURIComponent(location)}`);
+    }
+
+    const contentType = response.headers.get("content-type") || "";
+
+    // HTML content rewriting
+    if (contentType.includes("text/html")) {
+      let html = await response.text();
+
+      // Rewrite <a href>, <form action>, <script src>, <link href>, <img src>
+      html = html
+        // Links
+        .replace(/href\s*=\s*(['"])(?!#|mailto:|javascript:)([^'"]+)\1/gi, (m, q, u) => {
+          const abs = new URL(u, targetUrl).href;
+          return `href=${q}/?url=${encodeURIComponent(abs)}${q}`;
+        })
+        // Forms
+        .replace(/action\s*=\s*(['"])(?!#|mailto:|javascript:)([^'"]+)\1/gi, (m, q, u) => {
+          const abs = new URL(u, targetUrl).href;
+          return `action=${q}/?url=${encodeURIComponent(abs)}${q}`;
+        })
+        // Scripts
+        .replace(/<script\s+[^>]*src\s*=\s*(['"])([^'"]+)\1/gi, (m, q, u) => {
+          const abs = new URL(u, targetUrl).href;
+          return m.replace(u, `/?url=${encodeURIComponent(abs)}`);
+        })
+        // CSS
+        .replace(/<link\s+[^>]*href\s*=\s*(['"])([^'"]+)\1/gi, (m, q, u) => {
+          const abs = new URL(u, targetUrl).href;
+          return m.replace(u, `/?url=${encodeURIComponent(abs)}`);
+        })
+        // Images
+        .replace(/<img\s+[^>]*src\s*=\s*(['"])([^'"]+)\1/gi, (m, q, u) => {
+          const abs = new URL(u, targetUrl).href;
+          return m.replace(u, `/?url=${encodeURIComponent(abs)}`);
+        })
+        // Inline CSS url(...) 
+        .replace(/url\(\s*(['"]?)([^'")]+)\1\s*\)/gi, (m, q, u) => {
+          const abs = new URL(u, targetUrl).href;
+          return `url(${q}/?url=${encodeURIComponent(abs)}${q})`;
+        });
+
+      // Add <base> for relative links
+      if (!html.includes("<base")) {
+        html = html.replace(/<head.*?>/i, (head) => `${head}\n<base href="${targetUrl.origin}/">`);
+      }
+
+      // Strip CSP/X-Frame-Options
+      const headers = stripHeaders(response.headers);
+      Object.entries(headers).forEach(([k, v]) => res.setHeader(k, v));
+
+      res.setHeader("Content-Type", "text/html");
+      return res.send(html);
+    }
+
+    // Non-HTML (JS/CSS/images)
+    const buffer = await response.arrayBuffer();
+    const headers = stripHeaders(response.headers);
+    Object.entries(headers).forEach(([k, v]) => res.setHeader(k, v));
+    res.set("Content-Type", contentType);
+    return res.send(Buffer.from(buffer));
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Proxy error: " + err.message);
+  }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log("Maxed-out proxy running on port " + PORT));
