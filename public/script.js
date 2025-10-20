@@ -2,14 +2,14 @@
 const searchInput = document.getElementById('searchInput');
 
 // === CONFIG ===
-const PROXY_URL = 'https://crossycloakv3.vercel.app/api/proxy'; // Replace with your Vercel domain
+const PROXY_URL = 'https://crossycloakv3.vercel.app/api/proxy';
 
 // === HELPERS ===
 function isValidUrl(string) {
   try {
     new URL(string);
     return true;
-  } catch (_) {
+  } catch {
     return false;
   }
 }
@@ -40,8 +40,8 @@ function openCloaked(contentOrUrl) {
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Google Classroom</title> <!-- Updated title -->
-    <link rel="icon" type="image/png" href="${PROXY_URL}?url=${encodeURIComponent('https://your-app.vercel.app/img/classroom.png')}"> <!-- Dynamic favicon -->
+    <title>My Drive - Google Drive</title>
+    <link rel="icon" type="image/png" href="${PROXY_URL}?url=${encodeURIComponent('https://your-app.vercel.app/img/drive.png')}">
     <style>
       body { margin:0; padding:0; background:#000; }
       iframe {
@@ -51,19 +51,9 @@ function openCloaked(contentOrUrl) {
         border:none;
       }
     </style>
-    <script>
-      // Auto-redirect for navigation
-      window.addEventListener('message', (event) => {
-        if (event.data && event.data.url && event.data.url !== window.location.href) {
-          const newUrl = '${PROXY_URL}?url=' + encodeURIComponent(event.data.url);
-          window.location = 'about:blank'; // Reset
-          window.location = newUrl; // Redirect to cloaked version
-        }
-      });
-    </script>
   </head>
   <body>
-    <iframe src="${iframeSrc}" sandbox="${sandbox}" id="cloakFrame" onload="this.contentWindow.postMessage({ url: location.href }, '*');"></iframe>
+    <iframe src="${iframeSrc}" sandbox="${sandbox}" id="cloakFrame"></iframe>
   </body>
 </html>`;
 
@@ -76,9 +66,7 @@ function openCloaked(contentOrUrl) {
 searchInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
     const input = searchInput.value.trim();
-    if (input) {
-      openCloaked(input);
-    }
+    if (input) openCloaked(input);
   }
 });
 
