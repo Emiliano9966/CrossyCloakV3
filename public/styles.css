@@ -56,12 +56,10 @@ html, body {
   border-radius: 10px;
 }
 .search-icon {
-  width: auto;
-  height: 100%;
-  max-width: calc(100% - 40px); /* Reduced from 60px to allow a larger icon */
-  max-height: calc(100% - 2px); /* Adjusted to fit within border, allowing more height */
+  width: 20px;
+  height: 20px;
   margin: 0 10px;
-  object-fit: contain; /* Ensures proportional scaling */
+  background: transparent; /* Removed background to match PNG transparency */
 }
 #searchInput {
   flex: 1;
