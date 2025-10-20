@@ -5,9 +5,18 @@ const searchInput = document.getElementById('searchInput');
 const PROXY_URL = 'https://crossy-cloak-v3.vercel.app/api/proxy'; // Replace with your Vercel domain
 
 // === HELPERS ===
+function isValidUrl(string) {
+  try {
+    new URL(string);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
 function getTargetUrl(input) {
   input = input.trim();
-  if (input.startsWith('g:') || !/^https?:\/\//i.test(input)) {
+  if (input.startsWith('g:') || !isValidUrl(input)) {
     const query = input.startsWith('g:') ? input.slice(2).trim() : input;
     return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
   }
