@@ -1,0 +1,14 @@
+{
+    "name": "crossycloakv3",
+    "version": "1.0.0",
+    "description": "Website cloaker for school bypass using about:blank and proxy",
+    "dependencies": {
+        "axios": "^1.7.2"
+    },
+    "scripts": {
+        "start": "vercel dev"
+    },
+    "engines": {
+        "node": ">=14"
+    }
+}
