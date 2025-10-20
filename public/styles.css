@@ -56,12 +56,12 @@ html, body {
   border-radius: 10px;
 }
 .search-icon {
-  width: 20px;
-  height: 20px;
+  width: auto;
+  height: 100%;
+  max-width: calc(100% - 60px); /* Adjust based on padding and border */
+  max-height: calc(100% - 4px); /* Account for border */
   margin: 0 10px;
-  background: rgba(255, 255, 255, 0.1); /* Subtle background to enhance visibility */
-  padding: 2px;
-  border-radius: 3px;
+  object-fit: contain; /* Ensures the image scales without distortion */
 }
 #searchInput {
   flex: 1;
