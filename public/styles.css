@@ -58,10 +58,10 @@ html, body {
 .search-icon {
   width: auto;
   height: 100%;
-  max-width: calc(100% - 60px); /* Adjust based on padding and border */
-  max-height: calc(100% - 4px); /* Account for border */
+  max-width: calc(100% - 40px); /* Reduced from 60px to allow a larger icon */
+  max-height: calc(100% - 2px); /* Adjusted to fit within border, allowing more height */
   margin: 0 10px;
-  object-fit: contain; /* Ensures the image scales without distortion */
+  object-fit: contain; /* Ensures proportional scaling */
 }
 #searchInput {
   flex: 1;
