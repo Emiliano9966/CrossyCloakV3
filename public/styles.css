@@ -14,7 +14,6 @@ html, body {
   overflow: hidden;
 }
 
-
 /* Wrapper */
 .wrapper {
   display: flex;
@@ -34,7 +33,6 @@ html, body {
   color: #ffffff;
   margin-bottom: 10px;
   font-weight: 400;
-
 }
 .header p {
   font-size: clamp(1em, 1.9vw, 1.3em);
@@ -49,13 +47,27 @@ html, body {
   max-width: 700px;
   gap: 10px;
 }
+.search-input-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+}
+.search-icon {
+  width: 20px;
+  height: 20px;
+  margin: 0 10px;
+  filter: brightness(0) invert(1); /* Ensure the icon is visible on dark background */
+}
 #searchInput {
   flex: 1;
   padding: 15px 20px;
   font-size: clamp(1em, 2vw, 1.1em);
-  border: 2px solid rgba(255,255,255,0.08);
-  border-radius: 10px;
-  background: rgba(255,255,255,0.05);
+  border: none;
+  border-radius: 0;
+  background: transparent;
   color: #fff;
   outline: none;
   transition: background 0.3s, border 0.3s;
@@ -64,7 +76,6 @@ html, body {
   background: rgba(255,255,255,0.1);
   border-color: rgba(255,255,255,0.2);
 }
-
 
 /* Tagline */
 .tagline {
