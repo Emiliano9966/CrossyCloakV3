@@ -2,7 +2,7 @@
 const searchInput = document.getElementById('searchInput');
 
 // === CONFIG ===
-const PROXY_URL = 'https://crossycloakv3.vercel.app/api/proxy';
+const PROXY_URL = 'https://crossy-cloak-v3.vercel.app/api/proxy';
 
 // === HELPERS ===
 function isValidUrl(string) {
