@@ -2,7 +2,7 @@
 const searchInput = document.getElementById('searchInput');
 
 // === CONFIG ===
-const PROXY_URL = 'https://crossy-cloak-v3.vercel.app/api/proxy';
+const PROXY_URL = 'https://cloak-proxy.vercel.app/';
 
 // === HELPERS ===
 function isValidUrl(string) {
@@ -20,7 +20,7 @@ function getTargetUrl(input) {
     const query = input.startsWith('g:') ? input.slice(2).trim() : input;
     return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
   }
-  return input;
+  return input.startsWith('http') ? input : 'https://' + input;
 }
 
 // === CLOAK FUNCTION ===
@@ -54,6 +54,18 @@ function openCloaked(contentOrUrl) {
   </head>
   <body>
     <iframe src="${iframeSrc}" sandbox="${sandbox}" id="cloakFrame"></iframe>
+    <script>
+      const iframe = document.getElementById('cloakFrame');
+      // Try to follow redirects in iframe for same-origin URLs
+      iframe.onload = () => {
+        try {
+          const current = iframe.contentWindow.location.href;
+          if (current && current !== iframe.dataset.lastUrl) {
+            iframe.dataset.lastUrl = current;
+          }
+        } catch(e) { /* cross-origin ignored */ }
+      };
+    </script>
   </body>
 </html>`;
 
