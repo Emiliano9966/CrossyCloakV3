@@ -1,9 +1,6 @@
 // === ELEMENTS ===
 const searchInput = document.getElementById('searchInput');
 
-// === CONFIG ===
-const PROXY_URL = 'https://cloak-proxy.vercel.app/';
-
 // === HELPERS ===
 function isValidUrl(string) {
   try {
@@ -32,41 +29,21 @@ function openCloaked(contentOrUrl) {
     return;
   }
 
-  const iframeSrc = `${PROXY_URL}?url=${encodeURIComponent(targetUrl)}`;
-  const sandbox = 'allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation';
-
   const html = `
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>My Drive - Google Drive</title>
-    <link rel="icon" type="image/png" href="${PROXY_URL}?url=${encodeURIComponent('https://your-app.vercel.app/img/drive.png')}">
-    <style>
-      body { margin:0; padding:0; background:#000; }
-      iframe {
-        position:fixed;
-        top:0; left:0;
-        width:100%; height:100%;
-        border:none;
-      }
-    </style>
-  </head>
-  <body>
-    <iframe src="${iframeSrc}" sandbox="${sandbox}" id="cloakFrame"></iframe>
-    <script>
-      const iframe = document.getElementById('cloakFrame');
-      // Try to follow redirects in iframe for same-origin URLs
-      iframe.onload = () => {
-        try {
-          const current = iframe.contentWindow.location.href;
-          if (current && current !== iframe.dataset.lastUrl) {
-            iframe.dataset.lastUrl = current;
-          }
-        } catch(e) { /* cross-origin ignored */ }
-      };
-    </script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>My Drive - Google Drive</title>
+  <link rel="icon" type="image/png" href="/img/drive.png">
+  <style>
+    html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; }
+    iframe { position:fixed; top:0; left:0; width:100%; height:100%; border:none; }
+  </style>
+</head>
+<body>
+  <iframe src="${targetUrl}" allowfullscreen sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
+</body>
 </html>`;
 
   win.document.open();
