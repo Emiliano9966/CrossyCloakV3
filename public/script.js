@@ -2,7 +2,7 @@
 const searchInput = document.getElementById('searchInput');
 
 // === CONFIG ===
-const PROXY_URL = 'https://crossy-cloak-v3.vercel.app/api/proxy'; // Replace with your Vercel domain
+const PROXY_URL = 'https://crossycloakv3.vercel.app/api/proxy'; // Replace with your Vercel domain
 
 // === HELPERS ===
 function isValidUrl(string) {
@@ -40,7 +40,8 @@ function openCloaked(contentOrUrl) {
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Crossy 🦊 Blank Page</title>
+    <title>Google Classroom</title> <!-- Updated title -->
+    <link rel="icon" type="image/png" href="${PROXY_URL}?url=${encodeURIComponent('https://your-app.vercel.app/img/classroom.png')}"> <!-- Dynamic favicon -->
     <style>
       body { margin:0; padding:0; background:#000; }
       iframe {
