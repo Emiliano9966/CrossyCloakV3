@@ -9,26 +9,27 @@ function isValidUrl(string) {
   try { new URL(string); return true; } catch { return false; }
 }
 
-// Updated to use DuckDuckGo
+// Updated: Brave Search for non-URLs
 function getTargetUrl(input) {
   input = input.trim();
   if (!input) return null;
 
-  // DuckDuckGo search if not URL
+  // If input is not a valid URL, search with Brave
   if (!isValidUrl(input)) {
-    // Example search format: DuckDuckGo with web search
-    // origin=funnel_home_google & t=h_ & q=<query> & ia=web
-    return `https://duckduckgo.com/?origin=funnel_home_google&t=h_&q=${encodeURIComponent(input)}&ia=web`;
+    // Brave search format: https://search.brave.com/search?q=<query>&source=web
+    return `https://search.brave.com/search?q=${encodeURIComponent(input)}&source=web`;
   }
 
   return input.startsWith('http') ? input : 'https://' + input;
 }
 
-
 // === CLOAK FUNCTION USING WORKER ===
 function openCloaked(contentOrUrl) {
   const targetUrl = getTargetUrl(contentOrUrl);
-  if (!targetUrl) return;
+  if (!targetUrl) {
+    alert('No URL provided!');
+    return;
+  }
 
   const proxiedUrl = PROXY_BASE + encodeURIComponent(targetUrl);
 
