@@ -14,11 +14,15 @@ function getTargetUrl(input) {
   input = input.trim();
   if (!input) return null;
 
-  // DuckDuckGo search if input starts with 'd:'
-  if (input.startsWith('d:')) {
-    const query = input.slice(2).trim();
-    return `https://duckduckgo.com/?q=${encodeURIComponent(query)}&ia=web`;
+  // Non-URL -> DuckDuckGo search
+  if (!isValidUrl(input)) {
+    return `https://duckduckgo.com/?origin=funnel_home_google&t=h_&q=${encodeURIComponent(input)}&ia=web`;
   }
+
+  // Valid URL
+  return input.startsWith('http') ? input : 'https://' + input;
+}
+
 
   // Non-URL -> Brave Search
   if (!isValidUrl(input)) {
