@@ -1,5 +1,5 @@
 // === CONFIG ===
-const UV_BASE = "https://ultraviolet-app-tau-orcin.vercel.app/service/";
+const PROXY_BASE = "https://incog.dev/service/";
 
 // === ELEMENTS ===
 const searchInput = document.getElementById('searchInput');
@@ -27,7 +27,7 @@ function openCloaked(contentOrUrl) {
   const targetUrl = getTargetUrl(contentOrUrl);
   if (!targetUrl) return;
 
-  const proxiedUrl = UV_BASE + encodeURIComponent(targetUrl);
+  const proxiedUrl = PROXY_BASE + encodeURIComponent(targetUrl);
   const win = window.open('about:blank', '_blank');
 
   if (!win) {
@@ -40,7 +40,7 @@ function openCloaked(contentOrUrl) {
   <html>
   <head>
     <meta charset="UTF-8">
-    <title>My Drive - Google Drive</title>
+    <title>Cloaked Page</title>
     <link rel="icon" type="image/png" href="/img/drive.png">
     <style>
       html, body {
