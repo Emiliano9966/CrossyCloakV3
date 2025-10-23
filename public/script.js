@@ -141,3 +141,11 @@ function drawGrid() {
     }
   }
 }
+
+// === CIRCLE LINK HANDLERS ===
+document.querySelectorAll('.circle').forEach(circle => {
+  circle.addEventListener('click', () => {
+    const url = circle.getAttribute('data-url');
+    if (url) openCloaked(url);
+  });
+});
