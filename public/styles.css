@@ -124,8 +124,8 @@ html, body {
 
 /* Circle buttons (no text, just logos) */
 .circle {
-  width: 65px;
-  height: 65px;
+  width: 59px;
+  height: 59px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.05);
   border: 2px solid rgba(255, 255, 255, 0.08);
