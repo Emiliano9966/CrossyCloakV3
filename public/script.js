@@ -33,14 +33,14 @@ function openCloaked(contentOrUrl) {
   const win = window.open('about:blank', '_blank');
   if (!win) return alert('Popup blocked!');
 
-  // === Custom Cloaked Page ===
+  // === Custom Cloaked Page with fixed favicon URL ===
   const html = `
   <!DOCTYPE html>
   <html>
     <head>
       <meta charset="utf-8">
-      <title>My Drive - Google Drive</title>
-      <link rel="icon" type="image/png" href="/img/drive.png">
+      <title>about:blank</title>
+      <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Google_Drive_icon_%282020%29.svg/512px-Google_Drive_icon_%282020%29.svg.png?20221103153031">
       <style>
         html, body {
           margin: 0;
@@ -72,6 +72,7 @@ function openCloaked(contentOrUrl) {
   win.document.write(html);
   win.document.close();
 }
+
 
 
 // === EVENT LISTENER ===
