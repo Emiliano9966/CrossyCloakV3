@@ -9,14 +9,15 @@ function isValidUrl(string) {
   try { new URL(string); return true; } catch { return false; }
 }
 
+// Updated to use DuckDuckGo
 function getTargetUrl(input) {
   input = input.trim();
   if (!input) return null;
 
-  // Google search if not URL or prefixed with g:
-  if (input.startsWith('g:') || !isValidUrl(input)) {
-    const query = input.startsWith('g:') ? input.slice(2).trim() : input;
-    return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+  // DuckDuckGo search if not URL or prefixed with d:
+  if (input.startsWith('d:') || !isValidUrl(input)) {
+    const query = input.startsWith('d:') ? input.slice(2).trim() : input;
+    return `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
   }
 
   return input.startsWith('http') ? input : 'https://' + input;
