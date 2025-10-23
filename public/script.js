@@ -9,24 +9,13 @@ function isValidUrl(string) {
   try { new URL(string); return true; } catch { return false; }
 }
 
-// Returns the target URL for input
 function getTargetUrl(input) {
   input = input.trim();
   if (!input) return null;
 
-  // Non-URL -> DuckDuckGo search
+  // DuckDuckGo search if not a valid URL
   if (!isValidUrl(input)) {
     return `https://duckduckgo.com/?origin=funnel_home_google&t=h_&q=${encodeURIComponent(input)}&ia=web`;
-  }
-
-  // Valid URL
-  return input.startsWith('http') ? input : 'https://' + input;
-}
-
-
-  // Non-URL -> Brave Search
-  if (!isValidUrl(input)) {
-    return `https://search.brave.com/search?q=${encodeURIComponent(input)}&source=web`;
   }
 
   // Valid URL
