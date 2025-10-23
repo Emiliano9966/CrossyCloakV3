@@ -1,101 +1,132 @@
 /* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-html, body {
-  width: 100%;
-  height: 100%;
-  font-family: 'Inter', 'Arial', sans-serif;
-  background: #0a0f1a;
-  color: #eaeaea;
-  overflow: hidden;
-}
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Inter', 'Arial', sans-serif;
+      background: #0a0f1a;
+      color: #eaeaea;
+      overflow: hidden;
+    }
 
-/* Wrapper */
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  text-align: center;
-  padding: 20px;
-  position: relative;
-  z-index: 2;
-}
+    /* Wrapper */
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      z-index: 2;
+    }
 
-/* Header */
-.header h1 {
-  font-size: clamp(2.5em, 6vw, 4em);
-  color: #ffffff;
-  margin-bottom: 10px;
-  font-weight: 400;
-}
+    /* Header */
+    .header h1 {
+      font-size: clamp(2.5em, 6vw, 4em);
+      color: #ffffff;
+      margin-bottom: 10px;
+      font-weight: 400;
+    }
 
-.header p {
-  font-size: clamp(1em, 1.9vw, 1.3em);
-  color: #b0b0b0;
-  margin-bottom: 30px;
-}
+    .header p {
+      font-size: clamp(1em, 1.9vw, 1.3em);
+      color: #b0b0b0;
+      margin-bottom: 30px;
+    }
 
-/* Search */
-.search-container {
-  display: flex;
-  width: 100%;
-  max-width: 700px;
-  gap: 10px;
-}
+    /* Search */
+    .search-container {
+      display: flex;
+      justify-content: center; /* center horizontally */
+      width: 100%;
+      max-width: 700px;
+      gap: 10px;
+    }
 
-.search-input-wrapper {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid rgba(255,255,255,0.08);
-  border-radius: 10px;
-}
+    .search-input-wrapper {
+      flex: none; /* no flex-grow */
+      width: 250px; /* small starting width */
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      transition: width 0.4s ease;
+      transform-origin: center; /* expand from center */
+      cursor: text;
+    }
 
-.search-icon {
-  width: 20px;
-  height: 20px;
-  margin: 0 10px;
-  background: transparent;
-}
+    /* Expanded state on hover/focus/input */
+    .search-input-wrapper.expanded,
+    .search-input-wrapper:hover {
+      width: 100%;
+      max-width: 700px;
+    }
 
-#searchInput {
-  flex: 1;
-  padding: 15px 20px;
-  font-size: clamp(1em, 2vw, 1.1em);
-  border: none;
-  background: transparent;
-  color: #fff;
-  outline: none;
-  transition: background 0.3s, border 0.3s;
-}
+    .search-icon {
+      width: 20px;
+      height: 20px;
+      margin: 0 10px;
+      background: transparent;
+      user-select: none;
+    }
 
+    #searchInput {
+      flex: 1;
+      padding: 15px 20px;
+      font-size: clamp(1em, 2vw, 1.1em);
+      border: none;
+      background: transparent;
+      color: #fff;
+      outline: none;
+      width: 100%;
+      box-sizing: border-box;
+    }
 
-/* Tagline */
-.tagline {
-  margin-top: 20px;
-  font-size: clamp(0.9em, 2vw, 1.1em);
-  color: #b8b8b8;
-}
+    /* Tagline */
+    .tagline {
+      margin-top: 20px;
+      font-size: clamp(0.9em, 2vw, 1.1em);
+      color: #b8b8b8;
+    }
 
-/* Particles */
-#bgCanvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0; /* stays behind everything */
-  background: #0a0f1a;
-}
+    /* Particles canvas */
+    #bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0; /* behind everything */
+      background: #0a0f1a;
+    }
 
-.wrapper {
-  position: relative;
-  z-index: 2; /* ensures text & input appear above canvas */
-}
+    .wrapper {
+      position: relative;
+      z-index: 2;
+    }
+
+html,
+            body {
+              margin: 0;
+              padding: 0;
+              width: 100%;
+              height: 100%;
+              overflow: hidden;
+              background: #000;
+            }
+            iframe {
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              border: none;
+            }
