@@ -34,6 +34,7 @@ html, body {
   margin-bottom: 10px;
   font-weight: 400;
 }
+
 .header p {
   font-size: clamp(1em, 1.9vw, 1.3em);
   color: #b0b0b0;
@@ -47,6 +48,7 @@ html, body {
   max-width: 700px;
   gap: 10px;
 }
+
 .search-input-wrapper {
   flex: 1;
   display: flex;
@@ -55,23 +57,25 @@ html, body {
   border: 2px solid rgba(255,255,255,0.08);
   border-radius: 10px;
 }
+
 .search-icon {
   width: 20px;
   height: 20px;
   margin: 0 10px;
-  background: transparent; /* Removed background to match PNG transparency */
+  background: transparent;
 }
+
 #searchInput {
   flex: 1;
   padding: 15px 20px;
   font-size: clamp(1em, 2vw, 1.1em);
   border: none;
-  border-radius: 0;
   background: transparent;
   color: #fff;
   outline: none;
   transition: background 0.3s, border 0.3s;
 }
+
 #searchInput:focus {
   background: rgba(255,255,255,0.1);
   border-color: rgba(255,255,255,0.2);
