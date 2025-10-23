@@ -1,70 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Proxy Browser</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      margin: 0;
-      background: #0d0d0d;
-      color: #fff;
-      font-family: 'Roboto', sans-serif;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
-
-    header {
-      background: #1a1a1a;
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-    }
-
-    input {
-      flex: 1;
-      padding: 10px;
-      font-size: 16px;
-      border: none;
-      outline: none;
-      border-radius: 8px;
-      background: #2b2b2b;
-      color: #fff;
-      margin-right: 10px;
-    }
-
-    button {
-      background: #444;
-      border: none;
-      color: #fff;
-      padding: 10px 18px;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    button:hover {
-      background: #666;
-    }
-
-    iframe {
-      flex: 1;
-      border: none;
-      width: 100%;
-      height: 100%;
-      background: #fff;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crossy V3</title>
+  <link rel="icon" type="image/png" href="/img/classroom.png">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
-    <input id="urlInput" type="text" placeholder="Enter URL (e.g., https://example.com)" />
-    <button id="goButton">Go</button>
-  </header>
-  <iframe id="proxyFrame" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+  <!-- Main content -->
+  <div class="wrapper">
+    <div class="header">
+      <h1>Crossy V3</h1>
+      <p>Search or enter a URL to cloak in a blank tab.</p>
+    </div>
+
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <img src="/img/google.png" alt="Google" class="search-icon">
+        <input type="text" id="searchInput" placeholder="Search Google or type URL..." autocomplete="off">
+      </div>
+    </div>
+
+    <p class="tagline"></p>
+  </div>
+
+  <!-- Particle background -->
+  <canvas id="bgCanvas"></canvas>
 
   <script src="script.js"></script>
 </body>
