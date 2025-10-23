@@ -1,5 +1,5 @@
 // === CONFIG ===
-const PROXY_BASE = "https://incog.dev/service/";
+const PROXY_BASE = "https://crossycloaknode.emilianocabralcerroni.workers.dev/?url=";
 
 // === ELEMENTS ===
 const searchInput = document.getElementById('searchInput');
@@ -22,14 +22,14 @@ function getTargetUrl(input) {
   return input.startsWith('http') ? input : 'https://' + input;
 }
 
-// === OPEN PROXY IN BLANK TAB ===
+// === CLOAK FUNCTION USING WORKER ===
 function openCloaked(contentOrUrl) {
   const targetUrl = getTargetUrl(contentOrUrl);
   if (!targetUrl) return;
 
   const proxiedUrl = PROXY_BASE + encodeURIComponent(targetUrl);
-  const win = window.open('about:blank', '_blank');
 
+  const win = window.open('about:blank', '_blank');
   if (!win) {
     alert('Popup blocked! Please allow popups for this site.');
     return;
@@ -71,7 +71,7 @@ function openCloaked(contentOrUrl) {
   win.document.close();
 }
 
-// === EVENT LISTENERS ===
+// === EVENT LISTENER ===
 searchInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
     const input = searchInput.value.trim();
