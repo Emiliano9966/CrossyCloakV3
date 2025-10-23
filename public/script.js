@@ -43,44 +43,44 @@ function openCloaked(contentOrUrl) {
   if (!win) return alert("Popup blocked!");
 
   const html = `
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <meta charset="utf-8" />
-      <title>about:blank</title>
-      <link
-        rel="icon"
-        type="image/png"
-        href="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Google_Drive_icon_%282020%29.svg/512px-Google_Drive_icon_%282020%29.svg.png?20221103153031"
-      />
-      <style>
-        html,
-        body {
-          margin: 0;
-          padding: 0;
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
-          background: #000;
-        }
-        iframe {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          border: none;
-        }
-      </style>
-    </head>
-    <body>
-      <iframe
-        src="${proxiedUrl}"
-        allowfullscreen
-        sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"
-      ></iframe>
-    </body>
-  </html>`;
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>about:blank</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Google_Drive_icon_%282020%29.svg/512px-Google_Drive_icon_%282020%29.svg.png?20221103153031"
+    />
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        overflow: hidden;
+      }
+      iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe
+      src="${proxiedUrl}"
+      allowfullscreen
+      sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"
+    ></iframe>
+  </body>
+</html>`;
+
 
   win.document.open();
   win.document.write(html);
