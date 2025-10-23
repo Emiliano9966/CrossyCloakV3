@@ -1,36 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Crossy V3</title>
-  <link rel="icon" type="image/png" href="/img/drive.png" />
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <div class="wrapper">
-    <div class="header">
-      <h1>Crossy V3</h1>
-      <p>Search or enter a URL to cloak in a blank tab.</p>
-    </div>
+<link rel="icon" type="image/png" href="/img/drive.png" />
+<link rel="stylesheet" href="styles.css" />
 
-    <div class="search-container">
-      <div class="search-input-wrapper">
-        <img src="/img/google.png" alt="Google" class="search-icon" />
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="Search Bing or input URL..."
-          autocomplete="off"
-        />
-      </div>
-    </div>
-
-    <p class="tagline"></p>
+<div class="wrapper">
+  <div class="header">
+    <h1>crossy cloak v.3.1</h1>
+    <p>Search or enter a URL to cloak in a blank tab.</p>
   </div>
 
-  <canvas id="bgCanvas"></canvas>
+  <div class="search-container">
+    <div class="search-input-wrapper">
+      <img src="/img/google.png" alt="Bing" class="search-icon" />
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search Bing or type URL..."
+        autocomplete="off"
+      />
+    </div>
+  </div>
 
-  <script src="script.js"></script>
-</body>
-</html>
+  <!-- Circle shortcuts -->
+  <div class="circle-links">
+    <div class="circle" data-url="https://rustynailspace.com/wikilink/">
+      <img src="/img/rusty.png" alt="Wikilink" />
+      <span>Wikilink</span>
+    </div>
+    <div class="circle" data-url="https://github.com/">
+      <img src="/img/git.png" alt="Github" />
+      <span>Github</span>
+    </div>
+    <div class="circle" data-url="https://hianime.to/home">
+      <img src="/img/ha.png" alt="Hianime" />
+      <span>Hianime</span>
+    </div>
+    <div class="circle" data-url="https://notegpt.io/ask-ai">
+      <img src="/img/gpt.png" alt="Notegpt" />
+      <span>Notegpt</span>
+    </div>
+  </div>
+
+  <p class="tagline"></p>
+</div>
+
+<canvas id="bgCanvas"></canvas>
+
+<script src="script.js"></script>
