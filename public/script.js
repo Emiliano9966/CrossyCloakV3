@@ -14,14 +14,16 @@ function getTargetUrl(input) {
   input = input.trim();
   if (!input) return null;
 
-  // DuckDuckGo search if not URL or prefixed with d:
-  if (input.startsWith('d:') || !isValidUrl(input)) {
-    const query = input.startsWith('d:') ? input.slice(2).trim() : input;
-    return `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+  // DuckDuckGo search if not URL
+  if (!isValidUrl(input)) {
+    // Example search format: DuckDuckGo with web search
+    // origin=funnel_home_google & t=h_ & q=<query> & ia=web
+    return `https://duckduckgo.com/?origin=funnel_home_google&t=h_&q=${encodeURIComponent(input)}&ia=web`;
   }
 
   return input.startsWith('http') ? input : 'https://' + input;
 }
+
 
 // === CLOAK FUNCTION USING WORKER ===
 function openCloaked(contentOrUrl) {
