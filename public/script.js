@@ -6,21 +6,23 @@ const searchInput = document.getElementById('searchInput');
 
 // === HELPERS ===
 function isValidUrl(string) {
-  try { new URL(string); return true; } catch { return false; }
+  try { new URL(string); return true; }
+  catch { return false; }
 }
 
 function getTargetUrl(input) {
   input = input.trim();
   if (!input) return null;
 
-  // DuckDuckGo search if input is not a URL
+  // Bing search if input is not a URL
   if (!isValidUrl(input)) {
-    return `https://duckduckgo.com/?origin=funnel_home_google&t=h_&q=${encodeURIComponent(input)}&ia=web`;
+    return `https://www.bing.com/search?q=${encodeURIComponent(input)}&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=${encodeURIComponent(input)}&sc=12-7&sk=&cvid=${crypto.randomUUID()}`;
   }
 
   return input.startsWith('http') ? input : 'https://' + input;
 }
 
+// === CLOAK FUNCTION USING WORKER ===
 // === CLOAK FUNCTION USING WORKER ===
 function openCloaked(contentOrUrl) {
   const targetUrl = getTargetUrl(contentOrUrl);
@@ -28,23 +30,41 @@ function openCloaked(contentOrUrl) {
 
   const proxiedUrl = PROXY_BASE + encodeURIComponent(targetUrl);
 
-  // Open about:blank iframe
   const win = window.open('about:blank', '_blank');
   if (!win) return alert('Popup blocked!');
 
+  // === Custom Cloaked Page ===
   const html = `
   <!DOCTYPE html>
   <html>
     <head>
       <meta charset="utf-8">
-      <title>Cloaked Page</title>
+      <title>My Drive - Google Drive</title>
+      <link rel="icon" type="image/png" href="/img/drive.png">
       <style>
-        html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; }
-        iframe { position:fixed; top:0; left:0; width:100%; height:100%; border:none; }
+        html, body {
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          background: #000;
+        }
+        iframe {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border: none;
+        }
       </style>
     </head>
     <body>
-      <iframe src="${proxiedUrl}" allowfullscreen sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
+      <iframe src="${proxiedUrl}"
+              allowfullscreen
+              sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation">
+      </iframe>
     </body>
   </html>`;
 
@@ -52,6 +72,7 @@ function openCloaked(contentOrUrl) {
   win.document.write(html);
   win.document.close();
 }
+
 
 // === EVENT LISTENER ===
 searchInput.addEventListener('keypress', (e) => {
@@ -61,55 +82,30 @@ searchInput.addEventListener('keypress', (e) => {
   }
 });
 
-// === PARTICLE BACKGROUND ===
+// === STATIC DOT GRID BACKGROUND ===
 const canvas = document.getElementById('bgCanvas');
 const ctx = canvas.getContext('2d');
-let particles = [];
-const particleCount = 50;
 
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
+  drawGrid();
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
-class Particle {
-  constructor() { this.reset(); }
-  reset() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.vx = (Math.random() - 0.5) * 0.4;
-    this.vy = (Math.random() - 0.5) * 0.4;
-    this.size = Math.random() * 1.8 + 0.5;
-    this.alpha = Math.random() * 0.5 + 0.2;
-  }
-  update() {
-    this.x += this.vx;
-    this.y += this.vy;
-    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height)
-      this.reset();
-  }
-  draw() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255,255,255,${this.alpha})`;
-    ctx.fill();
-  }
-}
-
-function initParticles() {
-  particles = Array.from({ length: particleCount }, () => new Particle());
-}
-
-function animate() {
+function drawGrid() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  for (const p of particles) {
-    p.update();
-    p.draw();
-  }
-  requestAnimationFrame(animate);
-}
+  const spacing = 40; // distance between dots
+  const radius = 2;   // dot size
+  const color = 'rgba(255, 255, 255, 0.05)'; // soft white/gray look
 
-initParticles();
-animate();
+  for (let x = 0; x < canvas.width; x += spacing) {
+    for (let y = 0; y < canvas.height; y += spacing) {
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+  }
+}
