@@ -1,113 +1,66 @@
-// === ELEMENTS ===
-const searchInput = document.getElementById('searchInput');
+// === CLOAK PROXY CONFIG ===
+const UV_URL = "https://ultraviolet-app-tau-orcin.vercel.app/service/"; // Your Ultraviolet instance
+const FALLBACK_PROXY = "https://cloak-proxy.vercel.app/?url="; // Backup if UV fails
 
-// === HELPERS ===
-function isValidUrl(string) {
+// === UTILITIES ===
+function isValidUrl(url) {
   try {
-    new URL(string);
+    new URL(url);
     return true;
   } catch {
     return false;
   }
 }
 
-function getTargetUrl(input) {
-  input = input.trim();
-  if (input.startsWith('g:') || !isValidUrl(input)) {
-    const query = input.startsWith('g:') ? input.slice(2).trim() : input;
-    return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+function encodeForUV(url) {
+  // Converts to full URL or Google search
+  if (!/^https?:\/\//i.test(url)) {
+    url = "https://www.google.com/search?q=" + encodeURIComponent(url);
   }
-  return input.startsWith('http') ? input : 'https://' + input;
+  return btoa(url); // Base64 encode
 }
 
-// === CLOAK FUNCTION ===
-function openCloaked(contentOrUrl) {
-  const targetUrl = getTargetUrl(contentOrUrl);
-  const win = window.open('about:blank', '_blank');
-  if (!win) {
-    alert('Popup blocked! Please allow popups for this site.');
-    return;
+// === MAIN LOADER ===
+async function loadPage(input) {
+  const iframe = document.getElementById("cloakFrame");
+  if (!input) return;
+
+  let targetUrl = input.trim();
+  if (!targetUrl) return;
+
+  // Handle search terms or URLs
+  if (!isValidUrl(targetUrl) && !targetUrl.includes(".")) {
+    targetUrl = "https://www.google.com/search?q=" + encodeURIComponent(targetUrl);
+  } else if (!/^https?:\/\//i.test(targetUrl)) {
+    targetUrl = "https://" + targetUrl;
   }
 
-  const html = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>My Drive - Google Drive</title>
-  <link rel="icon" type="image/png" href="/img/drive.png">
-  <style>
-    html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; }
-    iframe { position:fixed; top:0; left:0; width:100%; height:100%; border:none; }
-  </style>
-</head>
-<body>
-  <iframe src="${targetUrl}" allowfullscreen sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
-</body>
-</html>`;
+  const encoded = encodeForUV(targetUrl);
+  const uvLink = `${UV_URL}${encoded}`;
 
-  win.document.open();
-  win.document.write(html);
-  win.document.close();
+  // === TRY ULTRAVIOLET ===
+  try {
+    const test = await fetch(uvLink, { method: "HEAD", mode: "no-cors" });
+    iframe.src = uvLink;
+  } catch (err) {
+    console.warn("Ultraviolet failed, using fallback proxy:", err);
+    iframe.src = `${FALLBACK_PROXY}${encodeURIComponent(targetUrl)}`;
+  }
 }
 
-// === EVENT LISTENERS ===
-searchInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
-    const input = searchInput.value.trim();
-    if (input) openCloaked(input);
+// === EVENTS ===
+document.getElementById("goButton").addEventListener("click", () => {
+  const input = document.getElementById("urlInput").value;
+  loadPage(input);
+});
+
+document.getElementById("urlInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    loadPage(e.target.value);
   }
 });
 
-// === PARTICLE BACKGROUND ===
-const canvas = document.getElementById('bgCanvas');
-const ctx = canvas.getContext('2d');
-let particles = [];
-const particleCount = 50;
-
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
-
-class Particle {
-  constructor() { this.reset(); }
-  reset() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.vx = (Math.random() - 0.5) * 0.4;
-    this.vy = (Math.random() - 0.5) * 0.4;
-    this.size = Math.random() * 1.8 + 0.5;
-    this.alpha = Math.random() * 0.5 + 0.2;
-  }
-  update() {
-    this.x += this.vx;
-    this.y += this.vy;
-    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height)
-      this.reset();
-  }
-  draw() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255,255,255,${this.alpha})`;
-    ctx.fill();
-  }
-}
-
-function initParticles() {
-  particles = Array.from({ length: particleCount }, () => new Particle());
-}
-
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  for (const p of particles) {
-    p.update();
-    p.draw();
-  }
-  requestAnimationFrame(animate);
-}
-
-initParticles();
-animate();
+// === DEFAULT HOME PAGE ===
+window.onload = () => {
+  loadPage("https://google.com");
+};
