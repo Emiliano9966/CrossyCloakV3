@@ -39,10 +39,37 @@ function shouldUseWorkerFor(targetUrl) {
 // === CLOAK FUNCTION USING WORKER WHEN APPROPRIATE ===
 function openCloaked(contentOrUrl) {
   const targetUrl = getTargetUrl(contentOrUrl);
-  if (!targetUrl) {
-    alert('No URL provided!');
+  if (!targetUrl) return;
+
+  // If DuckDuckGo, open directly in new tab
+  if (targetUrl.includes('duckduckgo.com')) {
+    window.open(targetUrl, '_blank');
     return;
   }
+
+  // Use worker for everything else
+  const proxiedUrl = PROXY_BASE + encodeURIComponent(targetUrl);
+  const win = window.open('about:blank', '_blank');
+  if (!win) return alert('Popup blocked!');
+
+  const html = `
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Cloaked Page</title>
+      <style>html,body{margin:0;padding:0;height:100%;} iframe{width:100%;height:100%;border:none;}</style>
+    </head>
+    <body>
+      <iframe src="${proxiedUrl}" sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
+    </body>
+  </html>`;
+  
+  win.document.open();
+  win.document.write(html);
+  win.document.close();
+}
+
 
   const useWorker = shouldUseWorkerFor(targetUrl);
   const frameSrc = useWorker ? (PROXY_BASE + encodeURIComponent(targetUrl)) : targetUrl;
