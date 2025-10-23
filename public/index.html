@@ -3,31 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crossy V3</title>
-  <link rel="icon" type="image/png" href="/img/classroom.png">
-  <link rel="stylesheet" href="styles.css">
+  <title>Cloak Browser</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      color: #fff;
+      font-family: "Roboto", sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      background: #1c1c1c;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    input {
+      flex: 1;
+      padding: 8px 10px;
+      border: none;
+      border-radius: 6px;
+      outline: none;
+      background: #2b2b2b;
+      color: #fff;
+      font-size: 15px;
+    }
+
+    button {
+      background: #3c3c3c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 15px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #555;
+    }
+
+    iframe {
+      border: none;
+      width: 100%;
+      flex: 1;
+      background: #000;
+    }
+  </style>
 </head>
 <body>
-
-  <!-- Main content -->
-  <div class="wrapper">
-    <div class="header">
-      <h1>Crossy V3</h1>
-      <p>Search or enter a URL to cloak in a blank tab.</p>
-    </div>
-
-    <div class="search-container">
-      <div class="search-input-wrapper">
-        <img src="/img/google.png" alt="Google" class="search-icon">
-        <input type="text" id="searchInput" placeholder="Search Google or type URL..." autocomplete="off">
-      </div>
-    </div>
-
-    <p class="tagline"></p>
-  </div>
-
-  <!-- Particle background -->
-  <canvas id="bgCanvas"></canvas>
+  <header>
+    <span style="font-weight:600;">Cloak</span>
+    <input type="text" id="urlInput" placeholder="Enter a URL or search term...">
+    <button id="goButton">Go</button>
+  </header>
+  <iframe id="cloakFrame"></iframe>
 
   <script src="script.js"></script>
 </body>
