@@ -1,5 +1,5 @@
 // === CONFIG ===
-const PROXY_BASE = "https://crossycloaknode.emilianocabralcerroni.workers.dev/?url=";
+const PROXY_BASE = "https://your-worker-subdomain.workers.dev/?url="; // Replace with your Worker URL
 
 // === ELEMENTS ===
 const searchInput = document.getElementById('searchInput');
@@ -9,34 +9,39 @@ function isValidUrl(string) {
   try { new URL(string); return true; } catch { return false; }
 }
 
-// Updated: Brave Search for non-URLs
+// Search support: Brave default, DuckDuckGo fallback
 function getTargetUrl(input) {
-  input = input.trim();
-  if (!input) return null;
+  input = input.trim()
+  if (!input) return null
 
-  // If input is not a valid URL, search with Brave
-  if (!isValidUrl(input)) {
-    // Brave search format: https://search.brave.com/search?q=<query>&source=web
-    return `https://search.brave.com/search?q=${encodeURIComponent(input)}&source=web`;
+  // Detect prefixes for DuckDuckGo (optional)
+  if (input.startsWith('d:')) {
+    const query = input.slice(2).trim()
+    return `https://duckduckgo.com/?q=${encodeURIComponent(query)}&ia=web`
   }
 
-  return input.startsWith('http') ? input : 'https://' + input;
+  // Non-URL -> Brave Search
+  if (!isValidUrl(input)) {
+    return `https://search.brave.com/search?q=${encodeURIComponent(input)}&source=web`
+  }
+
+  return input.startsWith('http') ? input : 'https://' + input
 }
 
-// === CLOAK FUNCTION USING WORKER ===
+// === CLOAK FUNCTION ===
 function openCloaked(contentOrUrl) {
-  const targetUrl = getTargetUrl(contentOrUrl);
+  const targetUrl = getTargetUrl(contentOrUrl)
   if (!targetUrl) {
-    alert('No URL provided!');
-    return;
+    alert('No URL provided!')
+    return
   }
 
-  const proxiedUrl = PROXY_BASE + encodeURIComponent(targetUrl);
+  const proxiedUrl = PROXY_BASE + encodeURIComponent(targetUrl)
 
-  const win = window.open('about:blank', '_blank');
+  const win = window.open('about:blank', '_blank')
   if (!win) {
-    alert('Popup blocked! Please allow popups for this site.');
-    return;
+    alert('Popup blocked! Please allow popups for this site.')
+    return
   }
 
   const html = `
@@ -47,91 +52,77 @@ function openCloaked(contentOrUrl) {
     <title>Cloaked Page</title>
     <link rel="icon" type="image/png" href="/img/drive.png">
     <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background: #000;
-      }
-      iframe {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: none;
-      }
+      html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; }
+      iframe { position:fixed; top:0; left:0; width:100%; height:100%; border:none; }
     </style>
   </head>
   <body>
     <iframe src="${proxiedUrl}" allowfullscreen sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
   </body>
-  </html>`;
+  </html>`
 
-  win.document.open();
-  win.document.write(html);
-  win.document.close();
+  win.document.open()
+  win.document.write(html)
+  win.document.close()
 }
 
 // === EVENT LISTENER ===
-searchInput.addEventListener('keypress', (e) => {
+searchInput.addEventListener('keypress', e => {
   if (e.key === 'Enter') {
-    const input = searchInput.value.trim();
-    if (input) openCloaked(input);
+    const input = searchInput.value.trim()
+    if (input) openCloaked(input)
   }
-});
+})
 
 // === PARTICLE BACKGROUND ===
-const canvas = document.getElementById('bgCanvas');
-const ctx = canvas.getContext('2d');
-let particles = [];
-const particleCount = 50;
+const canvas = document.getElementById('bgCanvas')
+const ctx = canvas.getContext('2d')
+let particles = []
+const particleCount = 50
 
 function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth
+  canvas.height = window.innerHeight
 }
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
+window.addEventListener('resize', resizeCanvas)
+resizeCanvas()
 
 class Particle {
-  constructor() { this.reset(); }
+  constructor() { this.reset() }
   reset() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.vx = (Math.random() - 0.5) * 0.4;
-    this.vy = (Math.random() - 0.5) * 0.4;
-    this.size = Math.random() * 1.8 + 0.5;
-    this.alpha = Math.random() * 0.5 + 0.2;
+    this.x = Math.random() * canvas.width
+    this.y = Math.random() * canvas.height
+    this.vx = (Math.random() - 0.5) * 0.4
+    this.vy = (Math.random() - 0.5) * 0.4
+    this.size = Math.random() * 1.8 + 0.5
+    this.alpha = Math.random() * 0.5 + 0.2
   }
   update() {
-    this.x += this.vx;
-    this.y += this.vy;
+    this.x += this.vx
+    this.y += this.vy
     if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height)
-      this.reset();
+      this.reset()
   }
   draw() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255,255,255,${this.alpha})`;
-    ctx.fill();
+    ctx.beginPath()
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
+    ctx.fillStyle = `rgba(255,255,255,${this.alpha})`
+    ctx.fill()
   }
 }
 
 function initParticles() {
-  particles = Array.from({ length: particleCount }, () => new Particle());
+  particles = Array.from({ length: particleCount }, () => new Particle())
 }
 
 function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
   for (const p of particles) {
-    p.update();
-    p.draw();
+    p.update()
+    p.draw()
   }
-  requestAnimationFrame(animate);
+  requestAnimationFrame(animate)
 }
 
-initParticles();
-animate();
+initParticles()
+animate()
