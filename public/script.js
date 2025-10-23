@@ -13,9 +13,8 @@ function getTargetUrl(input) {
   input = input.trim();
   if (!input) return null;
 
-  // If not URL or prefixed with g:, treat as search
+  // DuckDuckGo search if input is not a URL
   if (!isValidUrl(input)) {
-    // DuckDuckGo search
     return `https://duckduckgo.com/?origin=funnel_home_google&t=h_&q=${encodeURIComponent(input)}&ia=web`;
   }
 
@@ -27,35 +26,26 @@ function openCloaked(contentOrUrl) {
   const targetUrl = getTargetUrl(contentOrUrl);
   if (!targetUrl) return;
 
-  // DuckDuckGo searches open in new tab (iframe blocked)
-  if (targetUrl.includes('duckduckgo.com')) {
-    window.open(targetUrl, '_blank');
-    return;
-  }
-
-  // Use Worker proxy for everything else
   const proxiedUrl = PROXY_BASE + encodeURIComponent(targetUrl);
+
+  // Open about:blank iframe
   const win = window.open('about:blank', '_blank');
-  if (!win) {
-    alert('Popup blocked! Please allow popups for this site.');
-    return;
-  }
+  if (!win) return alert('Popup blocked!');
 
   const html = `
   <!DOCTYPE html>
   <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Cloaked Page</title>
-    <link rel="icon" type="image/png" href="/img/drive.png">
-    <style>
-      html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; }
-      iframe { position:fixed; top:0; left:0; width:100%; height:100%; border:none; }
-    </style>
-  </head>
-  <body>
-    <iframe src="${proxiedUrl}" allowfullscreen sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
-  </body>
+    <head>
+      <meta charset="utf-8">
+      <title>Cloaked Page</title>
+      <style>
+        html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; }
+        iframe { position:fixed; top:0; left:0; width:100%; height:100%; border:none; }
+      </style>
+    </head>
+    <body>
+      <iframe src="${proxiedUrl}" allowfullscreen sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
+    </body>
   </html>`;
 
   win.document.open();
